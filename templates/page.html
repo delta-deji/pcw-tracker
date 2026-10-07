@@ -357,7 +357,7 @@
     html += `<div class="activity-group-label" style="color:var(--red);">Blocked (${cur.taskActivity.blocked.length})</div>`;
     for (const b of cur.taskActivity.blocked) {
       const t = cur.tasks.find(x=>x.key===b.key);
-      html += `<div class="activity-row"><span class="k">${t?t.epic:''}</span><span class="t">${b.key}</span><span class="small">${b.daysBlocked!=null?b.daysBlocked+' working days blocked':'blocked, since-date unknown (data gap)'}</span></div>`;
+      html += `<div class="activity-row"><span class="k">${t?t.epic:''}</span><span class="t">${b.key}</span><span class="small">${b.daysBlocked!=null?b.daysBlocked+(b.daysBlocked===1?' working day blocked':' working days blocked'):'blocked, since-date unknown (data gap)'}</span></div>`;
     }
     html += `<div class="activity-group-label" style="color:var(--red);">Stale (${cur.taskActivity.stale.length}) - active, no Jira update since last working day</div>`;
     if (cur.taskActivity.stale.length === 0) html += `<div class="small">${escapeHtml(cur.taskActivity.staleNote || "No stale tasks")}</div>`;
