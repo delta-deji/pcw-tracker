@@ -4,6 +4,28 @@ A Claude Code / Cowork skill that builds a read-only delivery tracker for one PC
 Committed Work) from Jira, and keeps it current with a daily refresh. Built for Deltatre PMs
 tracking delivery against `dicetech.atlassian.net`.
 
+## Install
+
+```bash
+git clone https://github.com/delta-deji/pcw-tracker.git ~/code/pcw-tracker
+ln -s ~/code/pcw-tracker ~/.claude/skills/pcw-tracker
+```
+
+That's it - restart Claude Code (or start a new session) and both the trigger phrases ("Build the
+PCW tracker for PCW-XXXX") and the `/pcw-tracker` slash command become available. This mirrors how
+`deltatre-ai-tools` installs its own skills: a symlink, not a copy, so a later `git pull` in the
+cloned folder updates what's installed without reinstalling anything.
+
+**Prerequisites**: a Claude Code / Cowork session with the Atlassian MCP connector (for
+`dicetech.atlassian.net`) and the Artifact/ArtifactData tools available - this skill publishes its
+tracker as a claude.ai Artifact with a shared database, which is Claude-specific; it has no GitHub
+Copilot equivalent.
+
+**Staying current**: `cd ~/code/pcw-tracker && git pull` whenever you want the latest version -
+no reinstall needed, same symlink. Each existing tracker records which skill version it was built
+on (`config.skillVersionBuilt`); run `/pcw-tracker update PCW-XXXX` afterwards to rebuild an
+existing tracker on the new version without re-asking any setup questions.
+
 ## 1. What it is, and who it's for
 
 A PCW is a Jira Initiative that groups the epics for one piece of delivery - think of it as the
