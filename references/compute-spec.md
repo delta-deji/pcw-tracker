@@ -188,7 +188,7 @@ and count toward the data confidence strip (§9).
 - A commitment is a contractual or non-negotiable date, entered only at setup or via an explicit
   owner edit - never inferred. PCW-level by default (one commitment covers the whole tracked
   scope). Epic-level commitments are Phase 2.
-- Fields: date, label (free text, e.g. "Contractual delivery to AMC"), optional reference
+- Fields: date, label (free text, e.g. "Contractual delivery to Acme Corp"), optional reference
   (contract/SOW string).
 - Shown as a hard line on the Gantt (Phase 2) and, in Phase 1, as "N working days remaining" in
   the header, separate from the PCW's own Planned End Date.
