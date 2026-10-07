@@ -70,7 +70,7 @@ Stored at `db.doc("config")` in the published artifact's shared database.
   "commitments": {
     "pcwLevel": {
       "date": "2026-09-14",
-      "label": "Handover to AMC+",
+      "label": "Handover to Acme Corp",
       "reference": null,
       "history": [
         // { "oldDate": null, "newDate": "2026-09-14", "changedAt": "2026-10-07T13:00:00Z", "reason": "initial setup" }
