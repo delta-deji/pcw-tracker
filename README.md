@@ -4,6 +4,31 @@ A Claude Code / Cowork skill that builds a read-only delivery tracker for one PC
 Committed Work) from Jira, and keeps it current with a daily refresh. Built for Deltatre PMs
 tracking delivery against `dicetech.atlassian.net`.
 
+## What it looks like
+
+Screenshots below are from [`docs/demo.html`](docs/demo.html) - a standalone page with entirely
+fictional sample data (no real Jira content), so you can see the real layout without needing
+Jira access or a claude.ai sign-in. Open it in any browser, or run it locally:
+
+```bash
+python3 -m http.server 8080 --directory docs   # then open http://localhost:8080/demo.html
+```
+
+**Headline**: the big number, status pills, pace against the commitment, and a plain-English
+explanation next to the status, not just a colour.
+
+![Headline card showing 45.2% complete, status pills, run rate and required rate, and a "Needs attention" list](docs/screenshots/01-headline.jpg)
+
+**Epic run rates and Gantt**: each epic's own pace, and a timeline with a real date axis, a
+today-line, and the commitment date.
+
+![Epic run rates table with signal pills, and a Gantt chart with coloured bars and a date axis](docs/screenshots/02-epicrates-gantt.jpg)
+
+**Task activity and dependency risk**: what's in PR or QA, what's blocked and for how long, and
+real Jira issue links classified as clear, at risk, or breached.
+
+![Task activity grouped by In PR, In QA, Blocked and Stale, and a dependency risk list](docs/screenshots/03-activity-deps.jpg)
+
 ## Install
 
 ```bash
