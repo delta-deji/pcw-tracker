@@ -65,7 +65,7 @@ say so if Deji asks for an earlier date, don't silently allow it.
 Ask: **"Is there a contractual deadline or commitment you're tracking towards?"**
 - Offer the PCW's own Planned End Date and Handover Date (if populated) as candidates, worded as
   candidates, not defaults - never assume either is the commitment without being told.
-- If yes: date, a label (e.g. "Contractual delivery to AMC"), optional reference (contract/SOW).
+- If yes: date, a label (e.g. "Contractual delivery to Acme Corp"), optional reference (contract/SOW).
 - If no: leave `commitments.pcwLevel` unset; the headline target date falls back through the
   chain in `references/compute-spec.md` §5.
 
