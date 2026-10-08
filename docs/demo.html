@@ -220,7 +220,7 @@
       { id: "2026-10-03", percentComplete: 36.2, doneTasks: 20, inProgressTasks: 12, totalCounted: 60 },
       { id: "2026-10-06", percentComplete: 40.0, doneTasks: 24, inProgressTasks: 13, totalCounted: 62, configChangeMarker: "mapping changed 6 Oct" },
       { id: "2026-10-07", percentComplete: 45.2, doneTasks: 28, inProgressTasks: 16, totalCounted: 62 }
-    ];
+    ].sort((a,b) => b.id.localeCompare(a.id)); // newest first, regardless of how this list was authored
     const staleWarn = isStaleData(cur.computedAt);
 
     const tasksByEpic = {};
@@ -293,7 +293,7 @@
     } else {
       html += `<table><thead><tr><th>Date</th><th class="num-col">% complete</th><th class="num-col">Done</th><th class="num-col">In progress</th><th class="num-col">Total</th></tr></thead><tbody>`;
       for (let i=0;i<snaps.length;i++) {
-        const s = snaps[i]; const prev = i>0 ? snaps[i-1] : null;
+        const s = snaps[i]; const prev = i<snaps.length-1 ? snaps[i+1] : null; // snaps is newest-first; "previous day" is the next row down
         html += `<tr><td>${s.id}${s.configChangeMarker && !s.configChangeMarker.startsWith("First") ? ' <span class="small">('+escapeHtml(s.configChangeMarker)+')</span>' : ''}</td>`;
         html += `<td class="num-col">${s.percentComplete}%${prev?deltaBadge(s.percentComplete,prev.percentComplete):''}</td>`;
         html += `<td class="num-col">${s.doneTasks}${prev?deltaBadge(s.doneTasks,prev.doneTasks):''}</td>`;
