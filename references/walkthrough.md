@@ -73,8 +73,11 @@ Ask: **"Is there a contractual deadline or commitment you're tracking towards?"*
 
 - **Who can view**: named people (list emails/accounts) or whole organisation - internal only,
   never public, never clients. Record as `operations.viewers`.
-- **Daily refresh time**: default 08:45 UK time, working days only. Record as
-  `operations.refreshTimeLocal` / `refreshTimezone`.
+- **Refresh cadence**: default every 2 hours during the working day (08:45 to 16:45 UK time),
+  working days only - not once a day. Record as `operations.refreshCadenceHours` /
+  `refreshWindowStartLocal` / `refreshWindowEndLocal` / `refreshTimezone`. Still only one snapshot
+  document per working day regardless of cadence - same-day refreshes replace it in place, per
+  compute-spec §7.
 - Make clear at this point: the schedule itself isn't created yet - it's created after the final
   confirmation (§9), live, because this environment requires an explicit approval moment to
   create a scheduled task (see SKILL.md "Scheduling"). If that approval fails for any reason, say
