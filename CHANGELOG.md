@@ -137,3 +137,21 @@ Second real `refresh` against live Jira, now with a day's worth of real drift be
   second real snapshot existed to diff against (see `test-checklist.md` #48). Fixed in
   `templates/page.html`, the live page, and `docs/demo.html` by sorting `snaps` explicitly instead
   of trusting the query's own order, and pointing `prev` at the next row down.
+- **Found and fixed a real mobile bug while actually verifying mobile rendering for the first
+  time** (previously an unconfirmed checklist item - the live page needs claude.ai sign-in, which
+  this session can't do, so this used `docs/demo.html` at 375px width via `resize_window`
+  instead): fixed-pixel grid columns (Epic run rates, Gantt) and wide tables (Daily snapshot) had
+  no overflow containment, so the entire page scrolled sideways to reveal them rather than just
+  the one card that needed it - `document.documentElement.scrollWidth` exceeded `clientWidth` by
+  over 100px. Fixed with `html, body { overflow-x:hidden }` plus `.card { overflow-x:auto }`,
+  which contains any wide content to a scroll within its own card. Confirmed fixed by the
+  scrollWidth/clientWidth equality after a cache-busted reload, not just by eye.
+- Also resolved VC-4049's long-standing "blocked since unknown" data gap: it was never a real gap
+  in Jira - `listJiraIssueChangelogs` just wasn't in this session's initial tool list and needed
+  `discover` then `executeRead` to reach. Its changelog shows Blocked since
+  2026-10-06T09:10:36+01:00. Logged in `SKILL.md` so a future session doesn't give up on a
+  changelog the same way.
+- Caught mid-session that `docs/demo.html` in the local repo clone had drifted from what was
+  actually pushed to GitHub (earlier fixes were pushed straight from the scratchpad copy via the
+  Contents API, without ever updating the local clone) - resynced before testing against it, since
+  testing against a stale file would have proven nothing.
