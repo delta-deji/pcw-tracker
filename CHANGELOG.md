@@ -117,3 +117,23 @@ promotion gate ("run cleanly on a real PCW and survived a config change").
   existing decision whose premise may have changed is fair game, not scope creep.
 - This clears the "survived a config change" half of the Phase 3 promotion gate. The "checked
   `DiceTechnology/deltatre-ai-tools`'s contribution conventions" half is still outstanding.
+
+## 0.1.6 - 2026-10-08
+
+Second real `refresh` against live Jira, now with a day's worth of real drift behind it.
+
+- Real drift found: 7 tasks progressed (into In PR/In QA, two unblocked), VC-4059 moved into a
+  genuinely unmapped status ("Ready for Release" - not in the status mapping), and DCD-539
+  appeared as a brand-new task under DCD-537 that didn't exist at the last refresh. Both the
+  unmapped status and the new task surfaced in Needs attention rather than silently being counted
+  or dropped. Due dates re-checked on all four in-scope epics via the per-epic full-view fetch -
+  none had moved.
+- **Found and fixed a real bug in the Daily snapshot table**: the delta badges (the small +/- shown
+  next to each number) were on the wrong row and computed backwards. The snapshots query returns
+  rows newest-first, but the render code's `prev` lookup (`snaps[i-1]`) was written assuming
+  oldest-first - so the newest row (which has a real previous day to compare against) showed no
+  delta at all, and the very first snapshot that ever existed (which has nothing to compare
+  against) showed a delta computed as old-minus-new instead of new-minus-old. Only visible once a
+  second real snapshot existed to diff against (see `test-checklist.md` #48). Fixed in
+  `templates/page.html`, the live page, and `docs/demo.html` by sorting `snaps` explicitly instead
+  of trusting the query's own order, and pointing `prev` at the next row down.
