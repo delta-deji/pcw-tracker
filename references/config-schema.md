@@ -88,7 +88,9 @@ Stored at `db.doc("config")` in the published artifact's shared database.
   },
 
   "operations": {
-    "refreshTimeLocal": "08:45",
+    "refreshCadenceHours": 2,              // default every 2 hours; 24 means once/day at window start
+    "refreshWindowStartLocal": "08:45",
+    "refreshWindowEndLocal": "16:45",
     "refreshTimezone": "Europe/London",
     "viewers": {
       "mode": "named",                      // "named" | "organization"
