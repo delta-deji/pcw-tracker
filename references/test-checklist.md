@@ -47,8 +47,8 @@ Status key: ☐ not yet exercised · ✅ pass · ❌ fail (see note) · ➖ defe
 | 37 | Viewers read-only; owner/co-owner only writers | page-template capability wiring | ✅ `db` rule `write: "owner"` on root; config.owner is Deji's accountId |
 | 38 | Second viewer sees identical numbers after reload | manual check w/ Deji | ☐ pending |
 | 39 | Sharing limited to named people, or org-wide | manual check w/ Deji (Share menu) | ☐ pending |
-| 40 | Scheduled refresh created live, approved by Deji | walkthrough §9.5 | ☐ pending |
-| 41 | End-of-session defaults question asked | walkthrough §10 | ☐ pending (asked at end of this build) |
+| 40 | Scheduled refresh created live, approved by Deji | walkthrough §9.5 | ✅ created 7 Oct with Deji present and explicit "YES"; cadence changed to every 2 hours on 8 Oct, also with explicit approval |
+| 41 | End-of-session defaults question asked | walkthrough §10 | ✅ asked and acted on 8 Oct - Deji approved promoting the refresh cadence, the mobile fix and the delta fix from PCW-1311-specific to skill-wide defaults (recorded as 0.1.7) |
 | 42 | Nothing changed in Jira throughout | self-audit at end of build | ✅ read-only operations only, confirmed |
 | 43 | Gantt | page-template §6 | ✅ pulled forward into v1 at Deji's request - date axis, today line, commitment line, no title truncation |
 | 44 | Epic-level commitments | - | ➖ Phase 2 |
