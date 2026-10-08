@@ -168,7 +168,19 @@ Reviewed `files.zip` (4 screenshots) from the brief's attachments. The actual lo
 
 ## Rules
 
-- Works at mobile width (375px) and up; no horizontal scroll.
+- Works at mobile width (375px) and up; no horizontal scroll. This was stated here from the start
+  but not actually true in code until 8 Oct - a fixed-width grid or a wide table will force its
+  container wider than the viewport unless something contains it. The working pattern: `html,
+  body { overflow-x:hidden }` so the page itself can never scroll sideways, plus `.card {
+  overflow-x:auto }` so a card whose content doesn't fit scrolls within its own bounds instead.
+  Verify with `document.documentElement.scrollWidth === clientWidth` at 375px, not just by eye -
+  this is also why Dark mode here still just says "respects `prefers-color-scheme`" rather than
+  "confirmed": a stated rule isn't the same claim as a verified one.
+- Daily snapshot rows must be sorted explicitly by date (`id`), newest first, right after reading
+  them - never assume the query already returns them in a useful order. The delta badge's `prev`
+  is the chronologically-earlier neighbour (the next row down in a newest-first list), not
+  `array[i-1]`; get this backwards and the delta lands on the wrong row and reads in the wrong
+  direction, which only shows up once a second real snapshot exists to diff against.
 - Respects light/dark via `prefers-color-scheme` and the `data-theme` override, per artifact-design.
 - Colour is never the only signal - every RAG pill carries its word (Green/Amber/Red) and its
   numbers as text, not just a background colour.
