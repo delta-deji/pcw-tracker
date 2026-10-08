@@ -56,11 +56,10 @@ Status key: ☐ not yet exercised · ✅ pass · ❌ fail (see note) · ➖ defe
 | 46 | Testing lane progress | - | ➖ Phase 2 |
 | 47 | Phase 3 promotion gate: survived a real config change via `/pcw-tracker scope` | SKILL.md | ✅ ROKU-1967's exclusion reconfirmed via a real `/scope` run on 2026-10-07 - config written (v1 to v2), recorded as a `reconfirmations` entry, page unaffected since the decision was "no change" |
 | 48 | Snapshot delta badges compare the right two rows, in the right direction | page-template §4 | ❌ found 8 Oct - found via a live screenshot after the second real snapshot existed: the query returns rows newest-first but the delta code assumed oldest-first (`prev = snaps[i-1]`), so the badge landed on the wrong row and read backwards (e.g. "In progress -3" when it had actually gone up by 3). ✅ fixed - `snaps` is now sorted explicitly instead of trusting query order, and `prev` points at the next row down |
+| 49 | VC-4049's blocked-since data gap | compute-spec §11 | ✅ resolved 8 Oct - the gap wasn't real data loss, it was `listJiraIssueChangelogs` not being in the initial tool list this session; `discover` then `executeRead` reached it. Changelog shows Blocked since 2026-10-06T09:10:36+01:00 (a same-second Blocked→Ready for Dev→Blocked correction). Logged in `SKILL.md` site facts so a future session doesn't give up on a changelog the same way |
 
 ## Known data gaps (flagged on the page's data confidence strip, not hidden)
 
-- VC-4049's exact "blocked since" date couldn't be confirmed from its changelog within this
-  build's effort budget - shown as unknown rather than guessed.
 - The standard Jira `duedate` and `updated` fields are both dropped by `searchJiraIssuesUsingJql`
   in every view and field combination tried - only `getJiraIssue(view:"full")` returns them,
   one issue at a time. This is logged in `SKILL.md`'s site facts; it's why due dates needed a
