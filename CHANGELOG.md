@@ -155,3 +155,23 @@ Second real `refresh` against live Jira, now with a day's worth of real drift be
   actually pushed to GitHub (earlier fixes were pushed straight from the scratchpad copy via the
   Contents API, without ever updating the local clone) - resynced before testing against it, since
   testing against a stale file would have proven nothing.
+
+## 0.1.7 - 2026-10-08
+
+Promoted three things from "PCW-1311 only" to skill-wide defaults, per Deji's explicit go-ahead
+(the end-of-session defaults question, walkthrough.md §10).
+
+- **Refresh cadence default changed from once/day to every 2 hours during the working day**
+  (08:45-16:45 UK time, working days only). `operations.refreshTimeLocal` replaced with
+  `refreshCadenceHours` / `refreshWindowStartLocal` / `refreshWindowEndLocal` in
+  `config-schema.md`; `walkthrough.md` §6, `SKILL.md` "Scheduling" and `README.md` §5 all updated
+  to describe this as the new default a future build offers, not a PCW-1311 special case. Still
+  only one snapshot document per working day regardless of cadence - unchanged.
+- **The mobile no-horizontal-scroll rule and the snapshot ordering rule are now spelt out as
+  concrete patterns in `page-template.md`**, not just stated as outcomes - both were true in
+  intent before 8 Oct but not actually true in code, and a restated-but-vague rule didn't stop
+  that. The CSS pattern (`overflow-x:hidden` on `html, body`, `overflow-x:auto` on `.card`) and
+  the explicit-sort-before-computing-deltas pattern are now the documented default for any future
+  page build or edit.
+- PCW-1311's own `operations` block migrated to the new field names to stay consistent with the
+  schema it's meant to follow.
