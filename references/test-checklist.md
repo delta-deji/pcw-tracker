@@ -13,8 +13,8 @@ Status key: ☐ not yet exercised · ✅ pass · ❌ fail (see note) · ➖ defe
 | 3 | Status buckets incl. Excluded/Unmapped, all six headline pills shown | compute-spec §2 | ✅ fixed - Blocked pill and Excluded/Unmapped counts were missing from the headline row, caught on a critical self-review and corrected |
 | 4 | Testing lane deferred to Phase 2, shown as Not Tracked meanwhile | compute-spec §3 | ✅ LTC-8522, LTC-11013 under Not Tracked |
 | 5 | Scope transparency: "Tracking N of M", Not Tracked, amber notice split by reason | compute-spec §4 | ✅ "Tracking 4 of 9"; amber notice - fixed a bug where ROKU-1967 (status Blocked, not closed) was wrongly excluded from the open count; now shows 2 open (1 Testing, 1 other) |
-| 6 | Drift: unmapped status, new epic, new task | compute-spec §4 | ✅ exercised for real - VC-4038 moved In PR to Ready for QA between builds, refresh correctly moved it to the In QA bucket and activity group |
-| 7 | Snapshot explains added/removed/excluded since previous | compute-spec §4, §7 | ☐ same - needs a second snapshot to diff against |
+| 6 | Drift: unmapped status, new epic, new task | compute-spec §4 | ✅ exercised for real twice - 7 Oct: VC-4038 moved In PR to Ready for QA, correctly re-bucketed to In QA. 8 Oct: VC-4059 moved to an unmapped status ("Ready for Release") and correctly excluded from % and run rate pending `/pcw-tracker scope`; DCD-539 appeared as a brand-new task under DCD-537 and was picked up automatically |
+| 7 | Snapshot explains added/removed/excluded since previous | compute-spec §4, §7 | ✅ exercised - 8 Oct snapshot records `scopeAddedSincePrevious: ["DCD-539"]` against the 7 Oct snapshot |
 | 8 | Working week Mon–Fri, holidays optional | compute-spec §5 | ✅ used throughout date maths |
 | 9 | Target date per epic, "No date" fallback | compute-spec §5 | ✅ DCD-538 shows "No date", excluded from pace maths |
 | 10 | Headline target date chain, "N working days over" | compute-spec §5 | ✅ resolved to PCW commitment (30 Oct) correctly |
@@ -37,7 +37,7 @@ Status key: ☐ not yet exercised · ✅ pass · ❌ fail (see note) · ➖ defe
 | 27 | One snapshot/working day, same-day refresh replaces not duplicates | compute-spec §7 | ✅ exercised - refreshed PCW-1311 twice on 7 Oct, same snapshot doc updated in place (version 1 to 2), no duplicate row |
 | 28 | No-snapshot day shows "no snapshot" | compute-spec §7 | ☐ not yet exercised - needs a missed working day |
 | 29 | Snapshot records scope/mapping-version/commitments/due-dates/skill-version | compute-spec §7 | ✅ |
-| 30 | Config-change and due-date-move markers on snapshot rows | compute-spec §7 | ☐ not yet exercised - needs a second snapshot to diff against |
+| 30 | Config-change and due-date-move markers on snapshot rows | compute-spec §7 | ☐ scope-added marker exercised (see #7); no config version change or due-date move has happened yet, so those two specific markers remain unexercised |
 | 31 | 30 working days shown, older collapsed not deleted | page-template §4 | ✅ logic present; only 1 row exists so far |
 | 32 | Page section order matches brief | page-template | ✅ (Gantt pulled forward into v1, see #43) |
 | 33 | "Data as of", staleness warning > 1 working day | compute-spec §14 | ✅ |
@@ -55,6 +55,7 @@ Status key: ☐ not yet exercised · ✅ pass · ❌ fail (see note) · ➖ defe
 | 45 | Comments | - | ➖ Phase 2 |
 | 46 | Testing lane progress | - | ➖ Phase 2 |
 | 47 | Phase 3 promotion gate: survived a real config change via `/pcw-tracker scope` | SKILL.md | ✅ ROKU-1967's exclusion reconfirmed via a real `/scope` run on 2026-10-07 - config written (v1 to v2), recorded as a `reconfirmations` entry, page unaffected since the decision was "no change" |
+| 48 | Snapshot delta badges compare the right two rows, in the right direction | page-template §4 | ❌ found 8 Oct - found via a live screenshot after the second real snapshot existed: the query returns rows newest-first but the delta code assumed oldest-first (`prev = snaps[i-1]`), so the badge landed on the wrong row and read backwards (e.g. "In progress -3" when it had actually gone up by 3). ✅ fixed - `snaps` is now sorted explicitly instead of trusting query order, and `prev` points at the next row down |
 
 ## Known data gaps (flagged on the page's data confidence strip, not hidden)
 
