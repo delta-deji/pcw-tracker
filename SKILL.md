@@ -36,6 +36,11 @@ as unknowns, nothing is guessed or invented, dates included.
   from "didn't ask" - always request date/status/parent-adjacent fields explicitly by id.
 - No bulk changelog endpoint exists. One `listJiraIssueChangelogs` call per issue. Fine at the
   scale seen so far (~100 issues per PCW); batch calls in parallel rather than serially.
+- **`listJiraIssueChangelogs` is not always a directly-callable tool in a fresh session** - it may
+  need `discover` (query: "list changelog for a jira issue") to find it, then `executeRead` with
+  `name: "listJiraIssueChangelogs"` to call it. Don't conclude a changelog is unreachable just
+  because the tool isn't in the initial tool list; this cost VC-4049's blocked-since date a full
+  build cycle as a reported "data gap" before it was actually looked for this way.
 - Known date custom fields: Start date `customfield_11012`, Planned Start Date
   `customfield_11145`, Planned End Date `customfield_11096`, Est. Start Date `customfield_13281`,
   Est. Due Date `customfield_13248`, Handover Date (PCW-level) `customfield_13634`, plus the
