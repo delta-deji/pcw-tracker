@@ -117,11 +117,14 @@ is careful never to say the second when it only knows the first.
 
 ## 5. What refreshes, and when
 
-Once a day (08:45 UK time by default, working days only), the tracker re-reads Jira and stores a
-fresh snapshot - that's the only time the numbers change. Opening or reloading the page never
-calls Jira itself; it just reads what was last stored, so two people looking at the same link at
-the same moment always see identical numbers. The page shows "Data as of [date, time]" and warns
-visibly if that's more than a working day old, in case a scheduled refresh was missed.
+Every 2 hours during the working day by default (08:45 to 16:45 UK time, working days only), the
+tracker re-reads Jira and stores a fresh snapshot - that's the only time the numbers change.
+Opening or reloading the page never calls Jira itself; it just reads what was last stored, so two
+people looking at the same link at the same moment always see identical numbers. Still only one
+snapshot is kept per working day no matter how many times it refreshes that day - same-day
+refreshes update it in place rather than creating duplicates. The page shows "Data as of [date,
+time]" and warns visibly if that's more than a working day old, in case a scheduled refresh was
+missed.
 
 Only the owner (and an optional named co-owner) can trigger a refresh or change anything. Everyone
 else the tracker is shared with is read-only, by design - the Share menu on the published page is
@@ -146,8 +149,9 @@ confirmed it.
 
 ## 7. Changing a tracker later
 
-- **`/pcw-tracker refresh PCW-XXXX`** (or "Refresh the PCW-XXXX tracker") - the daily or on-demand
-  pull from Jira. This is what the schedule runs automatically; it never touches your settings.
+- **`/pcw-tracker refresh PCW-XXXX`** (or "Refresh the PCW-XXXX tracker") - the scheduled or
+  on-demand pull from Jira. This is what the schedule runs automatically; it never touches your
+  settings.
 - **`/pcw-tracker scope PCW-XXXX`** (or "Change the scope on the PCW-XXXX tracker") - re-checks
   Jira for anything new (a new epic, a new status) and asks only about what's actually changed,
   not the whole walkthrough again. It's also the moment to revisit an earlier call - e.g. an epic
@@ -160,3 +164,7 @@ confirmed it.
 
 A bare PCW key, or the word "tracker" on its own, won't trigger any of this - you always need a
 key and one of the four actions above, by phrase or by slash command.
+
+## Licence
+
+[MIT](LICENSE).
