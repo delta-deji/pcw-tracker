@@ -92,7 +92,8 @@ and `snapshots/*`.
 
 ## Scheduling
 
-The daily refresh is a scheduled task created only after Deji's explicit yes at the walkthrough's
+The scheduled refresh (every 2 hours during the working day by default - see walkthrough.md §6,
+not once a day) is a scheduled task created only after Deji's explicit yes at the walkthrough's
 share-and-schedule step, with him present to approve its creation - this environment's own safety
 checks won't let it be created silently in the background. Design the refresh logic so it runs
 identically whether triggered by phrase, by `/pcw-tracker refresh`, or by the schedule: no
