@@ -175,3 +175,35 @@ Promoted three things from "PCW-1311 only" to skill-wide defaults, per Deji's ex
   page build or edit.
 - PCW-1311's own `operations` block migrated to the new field names to stay consistent with the
   schema it's meant to follow.
+
+## 0.1.8 - 2026-10-15
+
+`/pcw-tracker update` run after a multi-day gap in the automated schedule - real progress had
+piled up, and so had a real scheduling problem.
+
+- **Found the scheduler had gone silent**: the last genuinely fresh compute was 2026-10-14 21:45;
+  nothing had landed since despite several scheduled slots passing. The scheduled task's own run
+  history showed why - a run started 2026-10-13 14:51 (the `Agent`-sub-task incident, see
+  `SKILL.md` "Ground rules") is still marked `isRunning: true` with no activity since 2026-10-14
+  14:49, over a day later. Attempted to stop that stuck session directly
+  (`mcp__ccd_session_mgmt__stop_session`) - blocked by the environment's own safety classifier, the
+  same way scheduled-task creation and repo visibility changes were blocked earlier in this
+  project. Did not try to route around it; flagged it to Deji instead so he can stop it himself.
+- Recomputed everything live rather than trust the stale stored data: doneTasks 10 -> 18,
+  percentComplete 20.8% -> 36%, countedTasks 48 -> 50 (DCD-543 already counted as of the 14 Oct
+  compute, not new). All four epic dates re-verified unchanged.
+- **The headline signal was being computed wrong in the stored data**: compute-spec §6 is explicit
+  that "headline signal = the worst (reddest) signal among in-scope epics that have a target
+  date", not a pooled required-vs-actual calculation. Today the two disagree for the first time -
+  pooled numbers alone would read green (13.3/wk required vs 16.0/wk actual, pace has genuinely
+  caught up) - but DCD-538 individually is Red, so the headline correctly stays Red. Worth naming
+  because it's the first time this build has hit a case where the two methods would give different
+  answers.
+- **Found and fixed a second field-reliability bug, this time in the stale/idle calculation**: see
+  `SKILL.md` site facts - `statuscategorychangedate` only updates on a category change, not on
+  every status move, so a task that went Dev -> PR -> QA still shows its original Dev-entry date.
+  Re-verified all 11 In PR/In QA tasks via real changelogs instead of trusting the cheaper field;
+  two (DCD-502, DCD-510) would have been wrongly reported as more stale than they really are.
+- Needs attention dropped from 3 red epics to 1 (DCD-538 only) now that VC-4031 and DCD-537 pulled
+  back to Amber; stale count held at 7 (composition changed - most of yesterday's stale PRs got
+  merged, but VC-4073 newly qualifies).
