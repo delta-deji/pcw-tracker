@@ -266,3 +266,57 @@ count, last refresh timestamp, and "Reconciled with Jira at [time]" (from §12).
 The page always shows "Data as of [date, time]" from the stored `current` document. If that
 timestamp is older than one working day at the time the page is viewed, show a visible warning.
 Reload re-reads stored data; it never calls Jira directly (see `references/page-template.md`).
+
+## 15. `current` document shape - explicit schema (read this before writing `current`)
+
+Every section above describes what to compute, not where each result lives in the stored
+document. That gap caused a real, repeated bug: two independent refreshes on 2026-10-22 both
+wrote `tasks` nested inside `taskActivity` instead of as its own top-level field, which breaks
+the page outright (`cur.tasks` is what `render()` reads to build the per-epic task table;
+nested one level deeper, it's `undefined`). Both refreshes were numerically correct and still
+broke the page. This section exists so that doesn't happen a third time - `tasks` and
+`taskActivity` are **siblings**, not parent/child:
+
+```json
+{
+  "computedAt": "2026-10-22T15:20:00+01:00",
+  "skillVersion": "0.1.10",
+  "statusMappingVersion": 2,
+  "scopeEpicCount": 4,
+  "totalChildEpicCount": 10,
+  "reportingStart": "2026-10-07",
+  "headline": { "...": "§1, §5, §6 - buckets, percentComplete, signal, forecast, etc." },
+  "epics": [ "...one object per in-scope epic, §1/§6" ],
+  "needsAttention": [ "...top 5 by rule order, §9" ],
+  "needsAttentionMore": [ "...overflow beyond the top 5, as plain strings" ],
+  "needsAttentionMoreCount": 0,
+  "tasks": [
+    "THIS ARRAY IS TOP-LEVEL. One entry per counted-or-excluded-or-unmapped task (§1-§4):",
+    "{ key, epic, bucket, plus whichever of doneAt / blockedSince / daysBlocked / statusSince /",
+    "daysIdle / statusName / note apply to that bucket }"
+  ],
+  "taskActivity": {
+    "inPR": ["...task keys, §11"],
+    "inQA": ["...task keys, §11"],
+    "blocked": [ "...{key, daysBlocked} objects, §11" ],
+    "stale": [ "...{key, daysIdle} objects, §11, sorted longest-idle-first" ],
+    "staleNote": "...prose summary, §11",
+    "unmapped": [ "...{key, epic, status} objects for any task in an unmapped status, §4" ]
+  },
+  "dependencies": { "...": "§10" },
+  "notTracked": [ "...out-of-scope epics, §3/§4" ],
+  "notTrackedOpenCount": 0,
+  "notTrackedOpenByReason": {},
+  "dataConfidence": { "...": "§13" }
+}
+```
+
+Two sanity checks any build or refresh should run on its own output before writing it, not just
+trust the arithmetic was right along the way:
+
+1. `tasks` exists at the top level and is an array (not found inside `taskActivity` or anywhere
+   else).
+2. Reconstruct `headline.buckets` by counting `tasks` by `bucket` - it must match exactly; do the
+   same per-epic for `countedTasks`/`doneTasks`. A mismatch means the task list and the summary
+   numbers disagree, which is as serious as the nesting bug above - both are "the numbers were
+   computed right but the stored shape doesn't reflect them."
