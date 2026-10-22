@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.11 - 2026-10-22
+
+Root-cause fix for the 0.1.10 incident, after it recurred a second time.
+
+- **The very next scheduled refresh after the 0.1.10 fix (version 62) reintroduced the identical
+  bug** - `tasks` nested inside `taskActivity` again, breaking the page the same way
+  (`Error loading tracker: cur.tasks is not iterable`). Twice in a row on the same day meant it
+  wasn't an isolated slip - it was a documentation gap. `references/compute-spec.md` described
+  what to compute in every section, but nowhere stated the actual stored shape of `current` as an
+  explicit schema the way `references/config-schema.md` does for `config`; every build had to
+  infer the nesting from prose alone, and two independent passes inferred it wrong the same way.
+  Fixed live again (version 62 to 63), same manual-transcription-plus-reconciliation method as
+  0.1.10.
+- **Added `references/compute-spec.md` §15, "`current` document shape - explicit schema"** - a
+  concrete JSON skeleton showing `tasks` and `taskActivity` as top-level siblings, with an inline
+  note on exactly why this section exists. Also adds two mechanical sanity checks any build or
+  refresh should run on its own output before writing: `tasks` must be a top-level array, and the
+  bucket/per-epic counts reconstructed from `tasks` must match `headline`/`epics` exactly - a
+  structural check, not just an arithmetic one, since both incidents were numerically correct and
+  still broke the page.
+
 ## 0.1.0 - 2026-10-07
 
 Phase 1 initial build.
