@@ -207,3 +207,49 @@ piled up, and so had a real scheduling problem.
 - Needs attention dropped from 3 red epics to 1 (DCD-538 only) now that VC-4031 and DCD-537 pulled
   back to Amber; stale count held at 7 (composition changed - most of yesterday's stale PRs got
   merged, but VC-4073 newly qualifies).
+
+## 0.1.9 - 2026-10-15
+
+A second scheduler-reliability incident, same day as 0.1.8, plus a skill-wide default change
+Deji asked for once the fix was confirmed.
+
+- **Found the real cause of repeated multi-hour/multi-day scheduled-run stalls, beyond the
+  `Agent`-tool incident already logged**: two more unallowlisted tool calls in the normal refresh
+  path - `Write`/`Edit` used to stage `current`/`snapshots` JSON before an `ArtifactData` write,
+  and `Read` of this skill's own `references/*.md` files (only the scratchpad path was
+  allowlisted, not the skill's own directory). Either one blocks an unattended run on an approval
+  prompt nobody is there to click, same failure shape as the `Agent` incident. Fixed by: adding
+  `Read(/Users/Deji.Ogunkoya/.claude/skills/pcw-tracker/**)` to `~/.claude/settings.json`, and
+  banning `Write`/`Edit` staging in `SKILL.md` ground rules in favour of `ArtifactData`'s inline
+  `data` param (documents are well under its size limits, so this is never a real constraint).
+- **Verified live, not just by code review**: a manually-triggered ("Run now") unattended run
+  completed end to end in 5m43s with zero approval prompts.
+- **New operational fact logged**: a session that is itself an unattended scheduled-task run
+  cannot trigger or verify another run of its own routine (`run_scheduled_task` and
+  `start_session` both refuse this) - discovered trying to self-test the fix above. Testing an
+  unattended routine's behaviour needs a genuine user-initiated session.
+- **Skill-wide default refresh cadence changed from every 2 hours (08:45-16:45) to every hour
+  (08:45-19:45 UK time)**, at Deji's explicit request after today's incident - not just for
+  PCW-1311, for every future tracker's `walkthrough.md` §6 offer. Updated `SKILL.md` "Scheduling",
+  `walkthrough.md` §6, and the `config-schema.md` example. PCW-1311's own config and scheduled
+  task were updated to match the same values the same day.
+
+## 0.1.10 - 2026-10-22
+
+A broken-page incident, caught live by Deji opening the tracker.
+
+- **A scheduled refresh wrote `current`'s `tasks` array one level too deep** - nested inside
+  `taskActivity` instead of as its own top-level field - breaking the page outright
+  (`Error loading tracker: cur.tasks is not iterable`, since `render()` reads `cur.tasks` at the
+  top level to build the per-epic task table). The rest of that refresh's compute was good and
+  more current than anything on record (VC-4032 and DCD-537 both newly hit 100%, five more real
+  completions, VC-4061 newly excluded) - only the one field was misplaced. Fixed by moving `tasks`
+  back to the top level of `data` and re-verifying every bucket count and per-epic total against
+  the task list before writing back, rather than trusting the structure blind.
+- This wasn't traced to anything wrong in `SKILL.md` or `compute-spec.md` - both are unambiguous
+  that `current`'s shape is `{..., tasks: [...], taskActivity: {...}, ...}` as siblings, never
+  nested. Logged here as a caution rather than a rule change: after any write to `current`,
+  especially one built by a different session than the one reading it back, it's worth a quick
+  structural sanity check (`tasks` is a top-level array, bucket counts sum to `headline.buckets`,
+  every epic's `countedTasks`/`doneTasks` matches the task list) before trusting it's render-safe,
+  not just numerically correct.
